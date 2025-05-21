@@ -1,50 +1,60 @@
-#  2D Platformer Game — Final Java Project (LibGDX)
+#  Jumping Jack
 
-Welcome to the final course project: a **2D platformer** game created using **Java** and the **LibGDX** framework. The goal is to showcase gameplay elements (movement, jumping, enemy collision, coin collection) and apply at least 5 **software design patterns**.
+This is a 2D side-scrolling platformer game developed in Java using the LibGDX game framework.  
+It was built as a software engineering project to demonstrate the practical application of key **object-oriented design patterns**, modular code structure, and clean architecture.
+
+The game features two playable levels, enemies with different AI behaviors, jumping physics, coin collection, health system, win/lose conditions, and a pause feature.
+
 
 ---
 
-##  Features
+##  Key Features
 
--  Player can move left/right and jump using keyboard keys.
--  Collect coins to increase score.
--  Colliding with enemies reduces health.
--  Player starts with 3 lives shown as hearts.
--  Platforms and obstacles create level structure.
--  Winning condition: collect all coins.
--  Game Over screen shown if all lives are lost.
+-  Platforming with smooth movement and jumping
+-  Collectible coins per level
+-  Lives and enemy damage system
+-  Basic AI movement using strategy patterns
+-  Multiple levels (Level 1 & 2)
+-  Win and Game Over screens
+-  Pause / Resume functionality
+
+---
+
+##  Software Design Patterns Implemented
+
+| Pattern           | Description                                                                 | Where Used                         |
+|------------------|-----------------------------------------------------------------------------|------------------------------------|
+| **Singleton**     | Provides a single access point to global game objects                       | `MainGame` for `SpriteBatch`       |
+| **Factory Method**| Simplifies creation of different game entities                              | `EntityFactory` for coins, enemies |
+| **Strategy**      | Enables flexible enemy movement behavior                                    | `FullPatrolStrategy`, `LimitedPatrolStrategy` |
+| **Observer**      | Encapsulates and centralizes input handling                                 | `InputHandler`                     |
+| **State**         | Manages transitions between different game states (playing, paused, win, etc.) | `GameStateManager` and state classes |
 
 ---
 
 ##  Controls
 
-| Key       | Action             |
-|-----------|--------------------|
-| A / ←     | Move left          |
-| D / →     | Move right         |
-| Space     | Jump               |
-| R         | Restart (after win/lose) |
+| Key             | Function                     |
+|------------------|------------------------------|
+| `A / D` or `← / →` | Move player left / right      |
+| `SPACE`         | Jump                          |
+| `P`             | Toggle pause / resume         |
+| `R`             | Restart game (after win/loss) |
+
+
 
 ---
 
-##  Design Patterns Used
+##  Assets Required
 
-| Pattern       | Description |
-|---------------|-------------|
-| **Factory**   | `EntityFactory` creates player, enemy, coin, heart, and platform objects. |
-| **State**     | Game states: `PlayingState`, `GameOverState`, and `WinState`. |
-| **Strategy**  | (Planned) Enemy movement logic as interchangeable strategies. |
-| **Observer**  | (Planned/Optional) Notifying systems on coin collected or damage. |
-| **Singleton** | (Optional) Can be used to manage shared data like score or configuration. |
+Place these files in your `core/assets/` directory:
 
----
+- `background.png` — Background image for levels  
+- `player.png` — Player sprite  
+- `enemy.png` — Enemy sprite  
+- `coin.png` — Collectible coin  
+- `heart.png` — Life indicator  
+- `platform.png` — Platform blocks  
+- `font.otf` or `font.ttf` — Custom font for UI text
 
-## Technologies Used
-
-- **LibGDX** game framework
-- **Java 17+**
-- Textures in PNG format
-- Object-Oriented Design
-- IDE: IntelliJ IDEA (recommended)
-
----
+You can use placeholders or create your own pixel assets.
