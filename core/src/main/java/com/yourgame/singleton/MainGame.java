@@ -1,4 +1,4 @@
-package com.yourgame;
+package com.yourgame.singleton;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
