@@ -1,0 +1,163 @@
+@startuml
+
+' === Экранные классы ===
+class GameScreen {
+    -OrthographicCamera camera
+    -Viewport viewport
+    -Sprite player, enemy, enemy2
+    -ArrayList<Sprite> coins
+    -ArrayList<Platform> platforms
+    -BitmapFont font
+    -float velocityY, gravity, jumpVelocity
+    -int currentLevel, lives, score
+    -float damageCooldown, timeSinceLastHit
+    -MovementStrategy enemy1Strategy, enemy2Strategy
+    -Texture backgroundTexture, coinTexture, heartTexture, platformTexture
+    +show()
+    +render(float)
+    +resize(int, int)
+    +pause()
+    +resume()
+    +hide()
+    +dispose()
+    -loadLevel(int)
+    -update(float)
+    -drawCenteredText(String, float)
+}
+class IntroScreen {
+    +show()
+    +render(float)
+    +dispose()
+}
+class LevelTransitionScreen {
+    +show()
+    +render(float)
+    +dispose()
+}
+class MainMenuScreen {
+    +show()
+    +render(float)
+    +dispose()
+}
+class MainGame
+
+GameScreen --> MainGame
+IntroScreen --> MainGame
+LevelTransitionScreen --> MainGame
+MainMenuScreen --> MainGame
+
+class MainGame {
+    +SpriteBatch batch
+    +create()
+    +render()
+    +dispose()
+    +setScreen(Screen)
+    +resize(int, int)
+}
+
+class EntityFactory {
+    +createPlayer(Texture): Sprite
+    +createEnemy(Texture): Sprite
+    +createCoin(Texture, float, float): Sprite
+    +createPlatform(Texture, float, float): Platform
+}
+class Platform {
+    -Sprite sprite
+    +getTop(): float
+    +isPlayerOnTop(Sprite): boolean
+}
+GameScreen --> EntityFactory
+GameScreen --> Platform
+
+class InputHandler {
+    +handleHorizontal(Sprite, float)
+}
+GameScreen --> InputHandler
+
+interface MovementStrategy {
+    +move(Sprite, float)
+}
+class FullPatrolStrategy {
+    -minX: float
+    -maxX: float
+    -speed: float
+    +move(Sprite, float)
+}
+class LimitedPatrolStrategy {
+    -startX: float
+    -endX: float
+    -speed: float
+    +move(Sprite, float)
+}
+MovementStrategy <|.. FullPatrolStrategy
+MovementStrategy <|.. LimitedPatrolStrategy
+GameScreen --> MovementStrategy
+
+' === State Pattern ===
+interface GameState {
+    +update(float)
+    +render()
+    +isFinished(): boolean
+    +getMessage(): String
+}
+class GameStateManager {
+    -currentState: GameState
+    +setState(GameState)
+    +getCurrentState(): GameState
+    +isInPlay(): boolean
+    +isPaused(): boolean
+    +getCurrentMessage(): String
+}
+class PlayingState {
+    +update(float)
+    +render()
+    +isFinished(): boolean
+    +getMessage(): String
+}
+class PauseState {
+    +update(float)
+    +render()
+    +isFinished(): boolean
+    +getMessage(): String
+}
+class WinState {
+    +update(float)
+    +render()
+    +isFinished(): boolean
+    +getMessage(): String
+}
+class GameOverState {
+    +update(float)
+    +render()
+    +isFinished(): boolean
+    +getMessage(): String
+}
+
+GameState <|.. PlayingState
+GameState <|.. PauseState
+GameState <|.. WinState
+GameState <|.. GameOverState
+GameStateManager --> GameState
+GameScreen --> GameStateManager
+
+IntroScreen --> GameStateManager
+LevelTransitionScreen --> GameStateManager
+MainMenuScreen --> GameStateManager
+
+interface CoinObserver {
+    +onCoinCollected()
+}
+class CoinSubject {
+    -observers: List<CoinObserver>
+    +attach(CoinObserver)
+    +coinCollected()
+}
+class ScoreDisplay implements CoinObserver {
+    +onCoinCollected()
+}
+CoinObserver <|.. ScoreDisplay
+CoinSubject --> CoinObserver
+GameScreen --> CoinSubject
+GameScreen --> ScoreDisplay
+
+@enduml

@@ -145,7 +145,13 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         timeSinceLastHit += delta;
-        if (stateManager.isInPlay()) update(delta);
+        if (stateManager.isInPlay()) {
+            update(delta);
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+                game.setScreen(new MainMenuScreen(game));
+            }
+        }
 
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
@@ -167,12 +173,14 @@ public class GameScreen implements Screen {
         }
 
         if (!stateManager.isInPlay()) {
-            drawCenteredText(stateManager.getCurrentMessage(), 0);
-            if (!stateManager.isPaused()) {
-                drawCenteredText("Press R to Restart", -50);
+            drawCenteredText(stateManager.getCurrentMessage(), 20);
+            if (stateManager.getCurrentState() instanceof PauseState) {
+                drawCenteredText(((PauseState) stateManager.getCurrentState()).getSubMessage(), -20);
+            } else {
+                drawCenteredText("Press R to Restart", -20);
+                drawCenteredText("Press M for Main Menu", -60);
             }
         }
-
 
         game.batch.end();
 
@@ -242,9 +250,9 @@ public class GameScreen implements Screen {
 
         if (coins.isEmpty()) {
             if (currentLevel == 1) {
-                currentLevel = 2;
-                loadLevel(currentLevel);
-            } else {
+                game.setScreen(new LevelTransitionScreen(game, 2));
+            }
+            else {
                 stateManager.setState(new WinState());
             }
         }
@@ -255,6 +263,16 @@ public class GameScreen implements Screen {
         }
         return false;
     }
+    public void setLevel(int level) {
+        this.currentLevel = level;
+        loadLevel(level);
+    }
+    public GameScreen(MainGame game, int level) {
+        this.game = game;
+        this.currentLevel = level;
+    }
+
+
     @Override public void resize(int width, int height) { viewport.update(width, height); }
     @Override public void pause() {}
     @Override public void resume() {}

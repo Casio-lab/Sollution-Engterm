@@ -4,12 +4,10 @@ public class PauseState implements GameState {
 
     @Override
     public void update(float delta) {
-        // В паузе ничего не происходит
     }
 
     @Override
     public void render() {
-        // Отрисовка уже в GameScreen
     }
 
     @Override
@@ -19,6 +17,11 @@ public class PauseState implements GameState {
 
     @Override
     public String getMessage() {
-        return "PAUSED\nPress P to Resume";
+        return "PAUSED";
+    }
+
+    public String getSubMessage() {
+        return "Press P to Resume";
     }
 }
+

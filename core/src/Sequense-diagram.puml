@@ -1,0 +1,35 @@
+@startuml
+actor Player
+
+Player -> MainGame : create()
+MainGame -> IntroScreen : setScreen()
+
+IntroScreen -> MainGame : setScreen(MainMenuScreen)
+
+Player -> MainMenuScreen : presses Enter
+MainMenuScreen -> MainGame : setScreen(GameScreen)
+
+loop Each frame
+    MainGame -> GameScreen : render(delta)
+    GameScreen -> GameStateManager : isInPlay()
+    GameScreen -> InputHandler : handleHorizontal()
+    GameScreen -> MovementStrategy : move()
+    GameScreen -> Platform : isPlayerOnTop()
+    GameScreen -> EntityFactory : loadLevel()
+    GameScreen -> GameStateManager : setState(state)
+end
+
+Player -> GameScreen : collects all coins
+GameScreen -> MainGame : setScreen(LevelTransitionScreen)
+
+LevelTransitionScreen -> MainGame : setScreen(GameScreen(level 2))
+
+loop Frame update (level 2)
+    MainGame -> GameScreen : render()
+    GameScreen -> GameStateManager : isInPlay()
+end
+
+Player -> GameScreen : wins
+GameScreen -> GameStateManager : setState(WinState)
+
+@enduml
